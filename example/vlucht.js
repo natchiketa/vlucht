@@ -2,6 +2,7 @@
  Global
  */
 var map, origin, destination,
+    resolvedOrig, resolvedDest,
     scrollTop, lastScrollTop,
     percentScrollTop, lastPercentScrollTop,
     heading,
@@ -19,6 +20,12 @@ var CITIES = {
     }
 }
 
+// Origin/Destination Addresses: what you would search for if you were
+// searching for the locations with Google Maps. The destination will
+// only be used as a fallback, unless FORCE_DESTINATION is set to true
+var ORIGIN_ADDRESS      = 'Giza Plateau, Egypt';
+var DESTINATION_ADDRESS = 'New York, NY, USA';
+var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {    
     startY: 219,
@@ -312,11 +319,40 @@ $(function(){
         });
     });
 
-    setOriginAndDestination('Amsterdam', 'Sydney');
+    $(document).on('vlucht:resolveOrigin', function(){
+        geocoder.geocode({address: ORIGIN_ADDRESS}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var uscoredName = _.pluck(results[0].address_components, 'long_name').join('_').underscore();
+                CITIES[uscoredName] = _.object(['lat', 'lng'], _.values(results[0].geometry.location));
+                resolvedOrig = uscoredName;
+                $(document).trigger('vlucht:resolvedAddress');
+            }
+        });
+    });
 
-    percentScrollTop = $(document).scrollTop();
-    movePlane();
+    $(document).on('vlucht:resolveDestination', function(){
+        geocoder.geocode({address: DESTINATION_ADDRESS}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var uscoredName = _.pluck(results[0].address_components, 'long_name').join('_').underscore();
+                CITIES[uscoredName] = _.object(['lat', 'lng'], _.values(results[0].geometry.location));
+                resolvedDest = uscoredName;
+                $(document).trigger('vlucht:resolvedAddress');
+            }
+        });
+    });
 
-    initialize();
+    $(document).on('vlucht:resolvedAddress', function(){
+        if (!_.isUndefined(resolvedOrig) && !_.isUndefined(resolvedDest)) {
+            setOriginAndDestination(resolvedOrig, resolvedDest, FORCE_DESTINATION);
+            percentScrollTop = $(document).scrollTop();
+            movePlane();
+            initialize();
+        }
+    });
+
+    geocoder = new google.maps.Geocoder();
+    $(document).trigger('vlucht:resolveOrigin');
+    $(document).trigger('vlucht:resolveDestination');
+
 
 });
