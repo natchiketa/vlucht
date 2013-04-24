@@ -13,6 +13,9 @@ var CITIES = {
     },
     'Sydney': {
         lat: -33.859972, lng: 151.211111
+    },
+    'Brisbane': {
+        lat: -27.472778, lng: 153.027778
     }
 }
 
