@@ -105,11 +105,11 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
     if (_.isUndefined(originName)) return;
     forceDefaultDest = forceDefaultDest || false;
     origin = originName;
+    destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
 
     // If forcing the specified destination name, or if the browser doesn't support
     // geolocation, just use the specified name
     if (forceDefaultDest || !navigator.geolocation) {
-        destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
         $(document).trigger('vlucht:bindscrolling');
         return;
     }
@@ -130,7 +130,6 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
         // error handler
         function(errorCode) {
             console.log(errorCode)
-            destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
             $(document).trigger('vlucht:bindscrolling');
         }
 
