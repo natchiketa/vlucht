@@ -221,7 +221,7 @@ function _wayPoint(event) {
     scrollTop = $(document).scrollTop();
     percentScrollTop = (100 / $(document).height()) * scrollTop;
     //console.log(percentScrollTop);
-    map.setCenter(interpolateLatLng('Amsterdam', 'Sydney', percentScrollTop, 60));
+    map.setCenter(interpolateLatLng(origin, destination, percentScrollTop, 60));
     movePlane();
     // Save the scroll position percentage and offset of the plane's DOM element
     lastPercentScrollTop = percentScrollTop;
@@ -244,7 +244,7 @@ function initialize() {
         disableDoubleClickZoom: true,     //disable zooming
         scrollwheel: false,
         zoom: 6,
-        center: origin,
+        center: cityLatLng(origin),
         mapTypeId: google.maps.MapTypeId.ROADMAP //   ROADMAP; SATELLITE; HYBRID; TERRAIN;
     };
 
@@ -263,8 +263,8 @@ $(function(){
             .height($(this).height());
     });
 
-    origin = cityLatLng('Amsterdam');
-    destination = cityLatLng('Sydney');
+    origin = 'Amsterdam';
+    destination = 'Brisbane';
 
     percentScrollTop = $(document).scrollTop();
     movePlane();
