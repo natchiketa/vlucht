@@ -106,11 +106,12 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
     forceDefaultDest = forceDefaultDest || false;
     origin = originName;
     destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
+    $(document).trigger('vlucht:bindscrolling');
 
     // If forcing the specified destination name, or if the browser doesn't support
     // geolocation, just use the specified name
     if (forceDefaultDest || !navigator.geolocation) {
-        $(document).trigger('vlucht:bindscrolling');
+        $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
         return;
     }
 
@@ -124,13 +125,13 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
                 lng: position.coords.longitude
             };
             destination = 'CURRENT_LOCATION';
-            $(document).trigger('vlucht:bindscrolling');
+            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
         },
 
         // error handler
         function(errorCode) {
             console.log(errorCode)
-            $(document).trigger('vlucht:bindscrolling');
+            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
         }
 
     );
@@ -298,13 +299,6 @@ $(function(){
             .height($(this).height());
     });
 
-    setOriginAndDestination('Amsterdam', 'Sydney');
-
-    percentScrollTop = $(document).scrollTop();
-    movePlane();
-
-    initialize();
-
     // This custom event, `vlucht:bindscrolling` is triggered by setOriginAndDestination
     // once the origin and destination global variables have been defined. This is because
     // the fetching of user's current location is asynchronous.
@@ -318,5 +312,11 @@ $(function(){
         });
     });
 
+    setOriginAndDestination('Amsterdam', 'Sydney');
+
+    percentScrollTop = $(document).scrollTop();
+    movePlane();
+
+    initialize();
 
 });
