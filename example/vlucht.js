@@ -101,6 +101,42 @@ function angleBetweenCities(origCity, destCity) {
     return (Math.atan2(deltaY, deltaX) * (180 / Math.PI));
 }
 
+function setOriginAndDestination(originName, destinationName, forceDefaultDest) {
+    if (_.isUndefined(originName)) return;
+    forceDefaultDest = forceDefaultDest || false;
+    origin = originName;
+
+    // If forcing the specified destination name, or if the browser doesn't support
+    // geolocation, just use the specified name
+    if (forceDefaultDest || !navigator.geolocation) {
+        destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
+        $(document).trigger('vlucht:bindscrolling');
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        // success handler
+        function(position) {
+            console.log(position);
+            CITIES['CURRENT_LOCATION'] = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            destination = 'CURRENT_LOCATION';
+            $(document).trigger('vlucht:bindscrolling');
+        },
+
+        // error handler
+        function(errorCode) {
+            console.log(errorCode)
+            destination = _.has(CITIES, destinationName) ? destinationName : 'Sydney';
+            $(document).trigger('vlucht:bindscrolling');
+        }
+
+    );
+}
+
 function interpolateLatLng(origName, destName, percent, max) {
     var ilat, ilng;
     var orig = CITIES[origName];
@@ -263,21 +299,25 @@ $(function(){
             .height($(this).height());
     });
 
-    origin = 'Amsterdam';
-    destination = 'Brisbane';
+    setOriginAndDestination('Amsterdam', 'Sydney');
 
     percentScrollTop = $(document).scrollTop();
     movePlane();
 
     initialize();
 
-    // Throttle the function which is called by the scroll event handler. Requires
-    // the Underscore library, or an Underscore-compatible equivalent, like Lodash.
-    var wayPoint = _.throttle(_wayPoint, 100);
+    // This custom event, `vlucht:bindscrolling` is triggered by setOriginAndDestination
+    // once the origin and destination global variables have been defined. This is because
+    // the fetching of user's current location is asynchronous.
+    $(document).on('vlucht:bindscrolling', function(){
+        // Throttle the function which is called by the scroll event handler. Requires
+        // the Underscore library, or an Underscore-compatible equivalent, like Lodash.
+        var wayPoint = _.throttle(_wayPoint, 100);
 
-    $(window).on('scroll touchmove', function(event) {
-        wayPoint(event);
-
+        $(window).on('scroll touchmove', function(event) {
+            wayPoint(event);
+        });
     });
+
 
 });
