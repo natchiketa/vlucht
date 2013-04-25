@@ -11,30 +11,77 @@
             width: 100%;
             height: 5000px;
         }
-
-        #concept {
-            background: url("concept.png") no-repeat 0 0, 1920px 5000px transparent;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            z-index: 3;
-        }
+		#concept {
+			z-index: 3;	
+		}
 
         #bg-overlay {
-            background: url("bg.png") repeat 10px 10px;
+            background: url("images/bg.png") repeat 10px 10px;
             z-index: 2;
         }
+		
+		.imgHover {
+			display: inline;
+			position: relative;
+		}
+		.imgHover .hover {
+			display: none;
+			position: absolute;
+			right: 0;
+			z-index: 2;
+			background: url(images/yellow_sign.gif);
+			width: 225px;
+			height: 235px;
+		}
+		.text {
+			text-align: center;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 14px;
+			font-weight: bold;
+			margin-top: 45px;
+			height: 120px;
+		}
+		.lightbox_zoom {
+			float: left;
+			margin: 20px 0 0 20px;
+		}
+		.link {
+			float: right;
+			margin: 20px 20px 0 0;
+		}
     </style>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title>stage website</title>
-
-    <script type="text/javascript" src="sugar-1.3.9.min.js"></script>
-    <script type="text/javascript" src="lodash.underscore.min.js"></script>
-    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+	<link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="js/lightbox/themes/default/jquery.lightbox.css" />
+    <!--[if IE 6]>
+    <link rel="stylesheet" type="text/css" href="js/lightbox/themes/default/jquery.lightbox.ie6.css" />
+    <![endif]-->
+    
+    <script type="text/javascript" src="js/lightbox/jquery.lightbox.min.js"></script>
+    
+    <!-- lightbox includes -->
+    <script type="text/javascript" src="js/sugar-1.3.9.min.js"></script>
+    <script type="text/javascript" src="js/lodash.underscore.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
-    <script type="text/javascript" src="jQueryRotate.2.2.js"></script>
-    <script type="text/javascript" src="modernizr.custom.50030.js"></script>
+    <script type="text/javascript" src="js/jQueryRotate.2.2.js"></script>
+    <script type="text/javascript" src="js/modernizr.custom.50030.js"></script>
 
-    <link rel="stylesheet" href="vlucht.css"/>
-    <script type="text/javascript" src="vlucht.js"></script>
+    <link rel="stylesheet" href="css/vlucht.css"/>
+    <script type="text/javascript" src="js/vlucht.js"></script>
+    
+    <script>
+	$(function() {
+		$(".imgHover").hover(
+			function() {
+				$(this).children("img").fadeTo(600, 0.5).end().children(".hover").show();
+			},
+			function() {
+				$(this).children("img").fadeTo(400, 1).end().children(".hover").hide();
+			});
+	});
+	</script>
 
 </head>
 <body style="margin:0;padding:0;">
@@ -44,7 +91,330 @@
 </div>
 
 <div id="bg-overlay"></div>
-<div id="concept"></div>
+<div id="concept">
+<div id="wrapper">
+  <div id="im_here"> </div>
+  
+  <!-- webdesign & development -->
+  <div class="header" id="web_header">
+    <h2 class="header_title"> WEBDESIGN & DEVELOPMENT </h2>
+  </div>
+  <div class="portfolio_content">
+    <ul class="grid">
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              bizz mobile<br />
+              <br />
+              SERVICES:<br />
+              design, development & <br />
+              strategy </div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/bizz/1.jpg" class="lightbox" rel="bizz"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+            <div class="link"> <a target="_blank" href="http://bizz-mobile.nl"><img src="images/link_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/bizz.png"> </div>
+          
+          <a href="images/portfolio_items/bizz/2.jpg" class="lightbox" rel="bizz"></a>
+          <a href="images/portfolio_items/bizz/3.jpg" class="lightbox" rel="bizz"></a>
+          <a href="images/portfolio_items/bizz/4.jpg" class="lightbox" rel="bizz"></a>
+          <a href="images/portfolio_items/bizz/5.jpg" class="lightbox" rel="bizz"></a>
+          <a href="images/portfolio_items/bizz/6.jpg" class="lightbox" rel="bizz"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              Notariskantoor<br />
+              Van Reeuwijk<br />
+              <br />
+              SERVICES:<br />
+              design, development,<br />
+              strategy & SEO </div>
+
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/notaris/1.jpg" class="lightbox" rel="notaris"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+            <div class="link"> <a target="_blank" href="http://notaris-kantoor.info"><img src="images/link_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/notaris.png"> </div>
+          
+          <a href="images/portfolio_items/notaris/2.jpg" class="lightbox" rel="notaris"></a>
+          <a href="images/portfolio_items/notaris/3.jpg" class="lightbox" rel="notaris"></a>
+          <a href="images/portfolio_items/notaris/4.jpg" class="lightbox" rel="notaris"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> <br />
+              <br />
+              PERSONAL<br />
+              <br />
+              SERVICES:<br />
+              design, development,<br />
+              strategy & SEO </div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/media-surfer/1.jpg" class="lightbox" rel="media-surfer"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+            <div class="link"> <a target="_blank" href="http://media-surfer.nl"><img src="images/link_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/media-surfer.png"> </div>
+          
+          <a href="images/portfolio_items/media-surfer/2.jpg" class="lightbox" rel="media-surfer"></a>
+          <a href="images/portfolio_items/media-surfer/3.jpg" class="lightbox" rel="media-surfer"></a>
+          <a href="images/portfolio_items/media-surfer/4.jpg" class="lightbox" rel="media-surfer"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              School <br />
+              <br />
+              SERVICES:<br />
+              conceptualisation,design & <br />
+              strategy</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/studenten-bedrijven/1.png" class="lightbox" rel="studenten-bedrijven"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/studenten-bedrijven.png"> </div>
+          <a href="images/portfolio_items/studenten-bedrijven/2.png" class="lightbox" rel="studenten-bedrijven"></a>
+          <a href="images/portfolio_items/studenten-bedrijven/3.png" class="lightbox" rel="studenten-bedrijven"></a>
+          <a href="images/portfolio_items/studenten-bedrijven/4.png" class="lightbox" rel="studenten-bedrijven"></a>
+          <a href="images/portfolio_items/studenten-bedrijven/5.png" class="lightbox" rel="studenten-bedrijven"></a>
+          <a href="images/portfolio_items/studenten-bedrijven/6.png" class="lightbox" rel="studenten-bedrijven"></a>
+          <a href="images/portfolio_items/studenten-bedrijven/7.png" class="lightbox" rel="studenten-bedrijven"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              School <br />
+              <br />
+              SERVICES:<br />
+              conceptualisation,design & <br />
+              development</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/hku-portfolio/1.jpg" class="lightbox" rel="hku-portfolio"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+            <div class="link"> <a href="http://student-kmt.hku.nl/~jason2/"><img src="images/link_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/hku-portfolio.png"> </div>
+          <a href="images/portfolio_items/hku-portfolio/2.jpg" class="lightbox" rel="hku-portfolio"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              99designs <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/claim/1.jpg" class="lightbox" rel="claim"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/claim.png"> </div>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"><br />
+              PERSONAL <br />
+              <br />
+              SERVICES:<br />
+              conceptualisation,design & <br />
+              strategy</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/boodschappen-vergelijker/1.jpg" class="lightbox" rel="boodschappen-vergelijker"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/boodschappen_vergelijker.png"> </div>
+          <a href="images/portfolio_items/boodschappen-vergelijker/2.jpg" class="lightbox" rel="boodschappen-vergelijker"></a>
+          <a href="images/portfolio_items/boodschappen-vergelijker/3.jpg" class="lightbox" rel="boodschappen-vergelijker"></a>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              99designs <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/mkb/1.jpg" class="lightbox" rel="mkb"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/mkb.png"> </div>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> CLIENT:<br />
+              99designs <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/progressive/1.jpg" class="lightbox" rel="progressive"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/progressive.png"> </div>
+          <a href="images/portfolio_items/progressive/2.jpg" class="lightbox" rel="progressive"></a>
+          <a href="images/portfolio_items/progressive/3.jpg" class="lightbox" rel="progressive"></a>
+          <a href="images/portfolio_items/progressive/4.jpg" class="lightbox" rel="progressive"></a>
+          <a href="images/portfolio_items/progressive/4.jpg" class="lightbox" rel="progressive"></a>
+      </li>
+    </ul>
+  </div>
+  <!-- webdesign & development --> 
+  
+  <!-- graphic design -->
+  <div class="header" id="graphic_header">
+    <h2 class="header_title"> GRAPHIC DESIGN </h2>
+  </div>
+  <div class="portfolio_content">
+    <ul class="grid">
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"> <br />
+              PERSONAL <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/juice/1.jpg" class="lightbox"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/juice.png"> </div>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"><br />
+              CLIENT: <br />
+              Bizz Mobile <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/infographic/1.png" class="lightbox"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/infographic.png"> </div>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text"><br />
+              CLIENT: <br />
+              Kids with Attitude <br />
+              <br />
+              SERVICES:<br />
+              Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/peterpan/1.jpg" class="lightbox"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/peter_pan.png"> </div>
+      </li>
+    </ul>
+  </div>
+  <!-- graphic design --> 
+  
+  <!-- mobile interfaces -->
+  <div class="header" id="mobile_header">
+    <h2 class="header_title"> MOBILE INTERFACES </h2>
+  </div>
+  <div class="portfolio_content">
+    <ul class="grid">
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text">CLIENT: <br />
+              Bizz Mobile <br />
+              <br />
+              SERVICES:<br />
+              Conceptualisation & Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/schoonenberg/1.jpg" class="lightbox"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/schoonenberg.png"> </div>
+      </li>
+      <li>
+        <div class="imgHover">
+          <div class="hover">
+            <div class="text">CLIENT: <br />
+              School <br />
+              <br />
+              SERVICES:<br />
+              Conceptualisation & Design</div>
+            <div class="lightbox_zoom"> <a href="images/portfolio_items/escher-app/1.jpg" class="lightbox" rel="escher-app"><img src="images/lightbox_icon.png" width="30" height="30" /></a> </div>
+          </div>
+          <img class="voorkant_bord" src="images/escher.png"> </div>
+          <a href="images/portfolio_items/escher-app/2.jpg" class="lightbox" rel="escher-app"></a>
+          <a href="images/portfolio_items/escher-app/3.jpg" class="lightbox" rel="escher-app"></a>
+          <a href="images/portfolio_items/escher-app/4.png" class="lightbox" rel="escher-app"></a>
+          <a href="images/portfolio_items/escher-app/5.jpg" class="lightbox" rel="escher-app"></a>
+      </li>
+    </ul>
+  </div>
+  <!-- mobile interfaces --> 
+  
+  <!-- skillset -->
+  
+  <div class="header" id="skillset_header">
+    <h2 class="header_title"> SKILLSET </h2>
+  </div>
+  <div id="skillset_bars_container">
+    <div class="skillset_bar">
+      <div id="content">
+        <p>Design</p>
+        <img src="images/design_skillset.png" width="663" height="32" alt="design skillset" /></div>
+    </div>
+    <div class="skillset_bar">
+      <div id="content">
+        <p>Conceptualization</p>
+        <img src="images/concept_skillset.png" width="663" height="32" alt="Conceptualization skillset" /></div>
+    </div>
+    <div class="skillset_bar">
+      <div id="content">
+        <p>Development</p>
+        <img src="images/development_skillset.png" width="663" height="32" alt="development skillset" /></div>
+    </div>
+    <div class="skillset_bar">
+      <div id="content">
+        <p>Usability</p>
+        <img src="images/usability_skillset.png" width="663" height="32" alt="usability skillset" /></div>
+    </div>
+  </div>
+  <!-- skillset --> 
+  
+  <!-- contact me -->
+  
+  <div class="header" id="contact_header">
+    <h2 class="header_title"> CONTACT ME </h2>
+  </div>
+  <div id="get_over_here"> <img src="images/over_here.png" width="848" height="401" alt="get over here" /> </div>
+  <script>
+function onBlur(el) {
+    if (el.value == '') {
+        el.value = el.defaultValue;
+    }
+}
+function onFocus(el) {
+    if (el.value == el.defaultValue) {
+        el.value = '';
+    }
+}
+</script>
+  <div id="contact_form">
+    <form action="" method="post" id="form">
+      <input class="text_field" name="Name" type="text" value="Name..." onblur="onBlur(this)" onfocus="onFocus(this)"/>
+      </td>
+      <input class="text_field_right" name="Company_name" type="text" value="Company Name..." onblur="onBlur(this)" onfocus="onFocus(this)"/>
+      </td>
+      <span id="space"> </span>
+      <input class="text_field" name="email" type="text" value="Email..." onblur="onBlur(this)" onfocus="onFocus(this)"/>
+      </td>
+      <input class="text_field_right" name="phone" type="text" value="Phone # or skypeID" onblur="onBlur(this)" onfocus="onFocus(this)"/>
+      </td>
+      <textarea name="notes" cols="" rows="" id="notes" onblur="onBlur(this)" onfocus="onFocus(this)">Additional notes...</textarea>
+      <input id="send_btn" type="submit">
+    </form>
+  </div>
+  
+  <!-- contact me --> 
+  
+</div>
+
+<!-- initalizing lightbox --> 
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    $('.lightbox').lightbox();
+  });
+</script> 
+<!-- initalizing lightbox -->
+
+</div>
 <div id="plane"></div>
 
 </body>

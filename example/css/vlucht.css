@@ -39,7 +39,7 @@ a{
 }
 
 #plane {
-    background: url(plane.png) no-repeat;
+    background: url(../images/plane.png) no-repeat;
     width: 33px;
     height: 37px;
     position: fixed;
