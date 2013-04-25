@@ -29,9 +29,10 @@ var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {    
     startY: 219,
-    runway: 788,
+    runway: function() { return $(window).width() / 2 },
+    middleY: function() { return $(window).height() / 2 },
     rtMargin: 1450,
-    endX: 1040,
+    endX: function() { return $(window).width() / 2 },
     endY: -685
 };
 
@@ -42,9 +43,9 @@ var VLUCHT = function() {
             easeIn: 1,
             easeOut: 0.5,
             offsets: {
-                before: {left: this.runway, top: this.startY},
-                at: {left: this.runway, top: this.startY},
-                after: {left: this.runway, top: this.startY}
+                before: {left: this.runway(), top: this.startY},
+                at: {left: this.runway(), top: this.startY},
+                after: {left: this.runway(), top: this.startY}
             },
             origin: true
         },
@@ -54,9 +55,9 @@ var VLUCHT = function() {
             easeIn: 1.5,
             easeOut: 1.5,
             offsets: {
-                before: {left: this.runway, top: this.startY},
-                at: {left: (this.runway + this.rtMargin) / 2, top: this.startY},
-                after: {left: this.rtMargin - 5, top: this.startY}
+                before: {left: this.runway(), top: this.startY},
+                at: {left: (this.runway() + this.rtMargin) / 2, top: this.middleY()},
+                after: {left: this.rtMargin - 5, top: this.middleY()}
             }
         },
 
@@ -65,9 +66,9 @@ var VLUCHT = function() {
             easeIn: 4,
             easeOut: 4.5,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.startY},
-                at: {left: this.rtMargin, top: this.startY},
-                after: {left: this.rtMargin, top: this.startY}
+                before: {left: this.rtMargin - 5, top: this.middleY()},
+                at: {left: this.rtMargin, top:this.middleY()},
+                after: {left: this.rtMargin, top: this.middleY()}
             }
         },
 
@@ -76,9 +77,9 @@ var VLUCHT = function() {
             easeIn: 25,
             easeOut: 20,
             offsets: {
-                before: {left: this.rtMargin, top: this.startY},
-                at: {left: this.rtMargin, top: this.startY},
-                after: {left: this.rtMargin - 5, top: this.startY}
+                before: {left: this.rtMargin, top: this.middleY()},
+                at: {left: this.rtMargin, top: this.middleY()},
+                after: {left: this.rtMargin - 5, top: this.middleY()}
             }
         },
 
@@ -87,9 +88,9 @@ var VLUCHT = function() {
             easeIn: 5,
             easeOut: 15.7,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.startY},
-                at: {left: this.endX, top: this.startY},
-                after: {left: this.endX, top: this.endY}
+                before: {left: this.rtMargin - 5, top: this.middleY()},
+                at: {left: this.endX(), top: this.middleY()},
+                after: {left: this.endX(), top: this.endY}
             },
             destination: true
         }
