@@ -12,8 +12,11 @@ body {
 }
 
 #wrapper {
-	width: 70%;
-	float:left;	
+	width: 100%;	
+	display: block;
+	position: relative;
+	height: 100%;
+	overflow: hidden;
 }
 
 h2 {
@@ -21,15 +24,7 @@ h2 {
 	font-size: 38px;
 }
 
-#im_here {
-	background: url(../images/im_here.png);
-	width: 	613px;
-	height: 392px;
-	float: right;	
-	margin: 150px 0 150px 0;
-}
-
-/* generic classes */ 
+/* generic classes */
 
 .header {
 	float: left;
@@ -53,19 +48,42 @@ h2 {
 .header_title {
 	float: right;
 	margin: 16px 50px 0 0;
-	color: #FFF;	
+	color: #FFF;
 }
 
 .portfolio_content {
 	width: 848px;
-	float: right;	
+	float: right;
 	margin-bottom: 125px;
 }
 
-/* sperate header BG's */
+.subheading_dark {
+    font-family: 'Conv_FlyerLTStd-BlackCondensed';
+    font-size: 24px;
+    color: #201e1f;
+}
+
+/* separate header BG's */
+
+#im_here {
+    background: url(../images/intro_image.png) no-repeat 0 52px;
+    width: 649px;
+    height: 392px;
+    display: block;
+    position: relative;
+    margin: auto;
+}
+
+#im_here .subheading_dark {
+    position: absolute;
+    bottom: -25px;
+    text-transform: uppercase;
+    font-size: 36px;
+}
 
 #web_header {
-background: url(../images/bg_pattern_webdesign.png);
+    background: url(../images/bg_pattern_webdesign.png);
+    margin-top: 70px;
 }
 
 #web_header:after {

@@ -1,7 +1,8 @@
 /*
  Global
  */
-var map, origin, destination,
+var wayPoint,
+    map, origin, destination,
     resolvedOrig, resolvedDest,
     scrollTop, lastScrollTop,
     percentScrollTop, lastPercentScrollTop,
@@ -23,13 +24,13 @@ var CITIES = {
 // Origin/Destination Addresses: what you would search for if you were
 // searching for the locations with Google Maps. The destination will
 // only be used as a fallback, unless FORCE_DESTINATION is set to true
-var ORIGIN_ADDRESS      = 'Giza Plateau, Egypt';
+var ORIGIN_ADDRESS      = 'Amsterdam, Netherlands';
 var DESTINATION_ADDRESS = 'New York, NY, USA';
 var FORCE_DESTINATION   = false;
 
-var VLUCHTPUNTEN = {    
-    startY: 219,
-    runway: function() { return $(window).width() / 2 },
+var VLUCHTPUNTEN = {
+    startY: 274,
+    runway: function() { return ($(window).width() / 2) - 259 },
     middleY: function() { return $(window).height() / 2 },
     rtMargin: 1450,
     endX: function() { return $(window).width() / 2 },
@@ -43,9 +44,9 @@ var VLUCHT = function() {
             easeIn: 1,
             easeOut: 0.5,
             offsets: {
-                before: {left: this.runway(), top: this.startY},
-                at: {left: this.runway(), top: this.startY},
-                after: {left: this.runway(), top: this.startY}
+                before: {left: this.runway, top: this.startY},
+                at: {left: this.runway, top: this.startY},
+                after: {left: this.runway, top: this.startY}
             },
             origin: true
         },
@@ -55,9 +56,9 @@ var VLUCHT = function() {
             easeIn: 1.5,
             easeOut: 1.5,
             offsets: {
-                before: {left: this.runway(), top: this.startY},
-                at: {left: (this.runway() + this.rtMargin) / 2, top: this.middleY()},
-                after: {left: this.rtMargin - 5, top: this.middleY()}
+                before: {left: this.runway, top: this.startY},
+                at: {left: (this.runway + this.rtMargin) / 2, top: this.middleY},
+                after: {left: this.rtMargin - 5, top: this.middleY}
             }
         },
 
@@ -66,9 +67,9 @@ var VLUCHT = function() {
             easeIn: 4,
             easeOut: 4.5,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.middleY()},
-                at: {left: this.rtMargin, top:this.middleY()},
-                after: {left: this.rtMargin, top: this.middleY()}
+                before: {left: this.rtMargin - 5, top: this.middleY},
+                at: {left: this.rtMargin, top:this.middleY},
+                after: {left: this.rtMargin, top: this.middleY}
             }
         },
 
@@ -77,9 +78,9 @@ var VLUCHT = function() {
             easeIn: 25,
             easeOut: 20,
             offsets: {
-                before: {left: this.rtMargin, top: this.middleY()},
-                at: {left: this.rtMargin, top: this.middleY()},
-                after: {left: this.rtMargin - 5, top: this.middleY()}
+                before: {left: this.rtMargin, top: this.middleY},
+                at: {left: this.rtMargin, top: this.middleY},
+                after: {left: this.rtMargin - 5, top: this.middleY}
             }
         },
 
@@ -88,9 +89,9 @@ var VLUCHT = function() {
             easeIn: 5,
             easeOut: 15.7,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.middleY()},
-                at: {left: this.endX(), top: this.middleY()},
-                after: {left: this.endX(), top: this.endY}
+                before: {left: this.rtMargin - 5, top: this.middleY},
+                at: {left: this.endX, top: this.middleY},
+                after: {left: this.endX, top: this.endY}
             },
             destination: true
         }
@@ -184,6 +185,15 @@ function roundedOffset(offset, nearest) {
         : { left: (offset.left / nearest).round() * nearest, top: (offset.top  / nearest).round() * nearest }
 }
 
+// Will return the result for left/top if a function. jQuery.css can do this individually
+// with the .css() method, so this is for convenience only.
+function calcOffset(offset) {
+    return {
+        left: _.isFunction(offset.left) ? offset.left() : offset.left,
+        top: _.isFunction(offset.top) ? offset.top() : offset.top
+    }
+}
+
 function movePlane() {
 
     if (percentScrollTop == 0 || _.isUndefined(percentScrollTop)) {
@@ -192,13 +202,14 @@ function movePlane() {
         });
         if (origin) {
             $('#plane')
-                .css(origin.offsets.at)
+                .css(calcOffset(origin.offsets.at))
                 .rotate(0);
         }
         return;
     }
 
-    _.each(VLUCHT, function(vector) {
+    _.each(VLUCHT, function(v) {
+        var vector = _.clone(v);
         var before  = percentScrollTop < vector.pos && vector.pos - percentScrollTop <= vector.easeIn;
         var after   = percentScrollTop > vector.pos && percentScrollTop <= vector.pos + vector.easeOut;
 
@@ -209,6 +220,10 @@ function movePlane() {
 
         $('#plane').toggleClass('on_runway', vector.origin && after);
         $('#plane').toggleClass('arrived',   vector.destination && after);
+
+        vector.offsets.before = calcOffset(vector.offsets.before);
+        vector.offsets.at     = calcOffset(vector.offsets.at);
+        vector.offsets.after  = calcOffset(vector.offsets.after);
 
         var target  = before ? vector.offsets.before : vector.offsets.after;
         var easePos = before
@@ -303,8 +318,12 @@ $(function(){
 
     // Size the Google Maps canvas to the window height, both on load and when the window is resized.
     $(window).on('load resize', function(){
-        $('#canvas_holder')
+        $('#map_canvas')
             .height($(this).height());
+        $('#im_here')
+            .height($(this).height() / 2)
+            .css({marginTop: ($(this).height() - $('#im_here').height()) / 2});
+        wayPoint();
     });
 
     // This custom event, `vlucht:bindscrolling` is triggered by setOriginAndDestination
@@ -313,7 +332,7 @@ $(function(){
     $(document).on('vlucht:bindscrolling', function(){
         // Throttle the function which is called by the scroll event handler. Requires
         // the Underscore library, or an Underscore-compatible equivalent, like Lodash.
-        var wayPoint = _.throttle(_wayPoint, 100);
+        wayPoint = _.throttle(_wayPoint, 100);
 
         $(window).on('scroll touchmove', function(event) {
             wayPoint(event);
