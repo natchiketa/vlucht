@@ -29,7 +29,7 @@ var DESTINATION_ADDRESS = 'New York, NY, USA';
 var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {
-    startY: 274,
+    startY: function() { return ($(window).height() / 2) - 152 },
     runway: function() { return ($(window).width() / 2) - 259 },
     middleY: function() { return $(window).height() / 2 },
     rtMargin: 1450,
@@ -320,9 +320,14 @@ $(function(){
     $(window).on('load resize', function(){
         $('#map_canvas')
             .height($(this).height());
+
+        var newHeight = $(this).height() / 2;
         $('#im_here')
-            .height($(this).height() / 2)
-            .css({marginTop: ($(this).height() - $('#im_here').height()) / 2});
+            .height(newHeight)
+            .css({
+                marginTop: ($(this).height() - $('#im_here').height()) / 2,
+                backgroundPosition: '0 ' + (($(window).height() / 4) - 162) + 'px'
+            });
         wayPoint();
     });
 

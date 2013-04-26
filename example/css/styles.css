@@ -66,7 +66,7 @@ h2 {
 /* separate header BG's */
 
 #im_here {
-    background: url(../images/intro_image.png) no-repeat 0 52px;
+    background: url(../images/intro_image.png) no-repeat;
     width: 649px;
     height: 392px;
     display: block;
