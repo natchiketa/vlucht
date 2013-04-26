@@ -1,0 +1,222 @@
+@font-face {
+	font-family: 'Conv_FlyerLTStd-BlackCondensed';
+	src: url('../fonts/FlyerLTStd-BlackCondensed.eot?#iefix') format('embedded-opentype'),
+	     url('../fonts/FlyerLTStd-BlackCondensed.woff') format('woff'),
+	     url('../fonts/FlyerLTStd-BlackCondensed.ttf')  format('truetype'),
+	     url('../fonts/FlyerLTStd-BlackCondensed.svg#svgFontName') format('svg');
+}
+
+body {
+	margin:  0;
+	padding: 0;	
+}
+
+#wrapper {
+	width: 70%;
+	float:left;	
+}
+
+h2 {
+	font-family: 'Conv_FlyerLTStd-BlackCondensed';	
+	font-size: 38px;
+}
+
+#im_here {
+	background: url(../images/im_here.png);
+	width: 	613px;
+	height: 392px;
+	float: right;	
+	margin: 150px 0 150px 0;
+}
+
+/* generic classes */ 
+
+.header {
+	float: left;
+	position: relative;
+	height: 80px;
+	width: 100%;
+	margin-bottom: 82px;
+}
+
+
+.header:after {
+	position: absolute;
+	top: 16px; right: -25px;
+	width: 48px;
+	height: 47px;
+	transform: rotate(134deg) skewX(-10deg) skewY(-10deg);
+	content: '';
+}
+
+
+.header_title {
+	float: right;
+	margin: 16px 50px 0 0;
+	color: #FFF;	
+}
+
+.portfolio_content {
+	width: 848px;
+	float: right;	
+	margin-bottom: 125px;
+}
+
+/* sperate header BG's */
+
+#web_header {
+background: url(../images/bg_pattern_webdesign.png);
+}
+
+#web_header:after {
+background:  url(../images/bg_pattern_webdesign.png);
+}
+
+#graphic_header {
+background: url(../images/bg_pattern_graphic.png);
+}
+
+#graphic_header:after {
+background: url(../images/bg_pattern_graphic.png);
+}
+
+#mobile_header {
+background: url(../images/bg_pattern_mobile.png);
+}
+
+#mobile_header:after {
+background: url(../images/bg_pattern_mobile.png);
+}
+
+#skillset_header {
+background: url(../images/bg_pattern_skillset.png);
+}
+
+#skillset_header:after {
+background: url(../images/bg_pattern_skillset.png);
+}
+
+#contact_header {
+background: url(../images/bg_pattern_contact.png);
+}
+
+#contact_header:after {
+background: url(../images/bg_pattern_contact.png);
+}
+
+/* portfolio grid styling */ 
+
+ul.grid {
+  padding: 0;
+  list-style: none;
+  margin: 20px auto 0;
+  width: 848px;  
+}
+
+.grid li {
+  float: left;
+  padding: 0;
+  margin: 0 28px 30px 28px;
+} 
+
+.grid li a {
+  display: block;
+}
+
+.grid li .voorkant_bord {
+  padding: 0; margin: 0;
+  width: 225px;
+  height: 232px;
+  border-style: none;
+}
+
+.skillset_bar {
+	width: 100%;
+	height: 58px;
+	margin-bottom: 8px;
+	background: url(../images/skillset_bar_bg.png) repeat;
+	font-family: 'Conv_FlyerLTStd-BlackCondensed';
+	font-size: 18px;
+	color: #FFF;
+	overflow: hidden;
+}
+
+.skillset_bar #content {
+	width: 817px;
+	float: right;
+}
+
+.skillset_bar #content p {
+	float: left;
+	margin-top: 25px;	
+}
+
+.skillset_bar #content img {
+	float: right;
+	margin: 15px 15px 0 0;	
+}
+
+#skillset_bars_container {
+	margin-bottom: 100px;	
+}
+
+#get_over_here {
+	float: right;
+	margin-top: 100px;	
+}
+
+#contact_form {
+	float: right;	
+	margin-top: 20px;
+	width: 848px;
+}
+
+.text_field {
+	width: 385px;
+	height: 63px;
+	padding-left: 20px;	
+	margin: 0;	
+	font-size: 30px;
+	color: #9d9d9d;
+}
+
+.text_field_right {
+	float: right;	
+	width: 385px;
+	height: 63px;
+	padding-left: 20px;	
+	margin: 0;	
+	font-size: 30px;
+	color: #9d9d9d;
+}
+
+#space {
+	display: block;
+	height: 50px;	
+}
+
+#notes {
+	width: 825px;
+	height: 288px;
+	float: right;	
+	margin-top: 35px;
+	font-size: 30px;
+	color: #9d9d9d;
+	padding: 20px 0 0 20px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#send_btn {
+	background-image: url(../images/send_btn.png);
+	width: 848px;
+	height: 100px;
+	margin: 25px 0 200px 0;
+	border: none;
+	background-color: transparent;
+	text-indent:		-999em;
+	cursor: pointer;	
+}
+
+img {
+ border-style: none;
+}
