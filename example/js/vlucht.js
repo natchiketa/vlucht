@@ -32,12 +32,12 @@ var VLUCHTPUNTEN = {
     startY: function() { return ($(window).height() / 2) - 152 },
     runway: function() { return ($(window).width() / 2) - 259 },
     middleY: function() { return $(window).height() / 2 },
-    rtMargin: 1450,
+    rtMargin: function() { return ($(window).width() * 0.9) - (($('#plane').width() || 30) / 2) },
     endX: function() { return $(window).width() / 2 },
     endY: -685
 };
 
-var VLUCHT = function() {
+var VLUCHT, _VLUCHT = function() {
     return [
         {
             pos: 2,
@@ -67,7 +67,7 @@ var VLUCHT = function() {
             easeIn: 4,
             easeOut: 4.5,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.middleY},
+                before: { left: this.rtMargin, top: this.middleY},
                 at: {left: this.rtMargin, top:this.middleY},
                 after: {left: this.rtMargin, top: this.middleY}
             }
@@ -80,7 +80,7 @@ var VLUCHT = function() {
             offsets: {
                 before: {left: this.rtMargin, top: this.middleY},
                 at: {left: this.rtMargin, top: this.middleY},
-                after: {left: this.rtMargin - 5, top: this.middleY}
+                after: {left: this.rtMargin, top: this.middleY}
             }
         },
 
@@ -89,7 +89,7 @@ var VLUCHT = function() {
             easeIn: 5,
             easeOut: 15.7,
             offsets: {
-                before: {left: this.rtMargin - 5, top: this.middleY},
+                before: {left: this.rtMargin, top: this.middleY},
                 at: {left: this.endX, top: this.middleY},
                 after: {left: this.endX, top: this.endY}
             },
@@ -98,7 +98,6 @@ var VLUCHT = function() {
 
     ];
 };
-VLUCHT = _.bind(VLUCHT, VLUCHTPUNTEN)();
 
 function cityLatLng(name) {
     return new google.maps.LatLng(CITIES[name].lat, CITIES[name].lng)
@@ -196,6 +195,8 @@ function calcOffset(offset) {
 
 function movePlane() {
 
+    VLUCHT = _.bind(_VLUCHT, VLUCHTPUNTEN)();
+
     if (percentScrollTop == 0 || _.isUndefined(percentScrollTop)) {
         var origin = _.find(VLUCHT, function(vector) {
             return _.has(vector, 'origin') && vector.origin === true;
@@ -208,8 +209,7 @@ function movePlane() {
         return;
     }
 
-    _.each(VLUCHT, function(v) {
-        var vector = _.clone(v);
+    _.each(VLUCHT, function(vector) {
         var before  = percentScrollTop < vector.pos && vector.pos - percentScrollTop <= vector.easeIn;
         var after   = percentScrollTop > vector.pos && percentScrollTop <= vector.pos + vector.easeOut;
 
@@ -321,6 +321,7 @@ $(function(){
         $('#map_canvas')
             .height($(this).height());
 
+        // Responsive positioning for the intro
         var newHeight = $(this).height() / 2;
         $('#im_here')
             .height(newHeight)
@@ -328,6 +329,18 @@ $(function(){
                 marginTop: ($(this).height() - $('#im_here').height()) / 2,
                 backgroundPosition: '0 ' + (($(window).height() / 4) - 162) + 'px'
             });
+
+        // Update the portfolio layout
+        var introLeft = $('#im_here').offset().left;
+        var itemsWidth = $('.portfolio_content').width();
+        $('.header').css({
+            minWidth: itemsWidth + introLeft + 50
+        });
+        $('.portfolio_content, .header_title').css({
+            marginLeft: introLeft
+        });
+
+        // Update the map and plane
         wayPoint();
     });
 
