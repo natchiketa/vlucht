@@ -3,11 +3,13 @@
  */
 var wayPoint,
     map, origin, destination,
+    $plane,
     resolvedOrig, resolvedDest,
-    scrollTop, lastScrollTop,
+    scrollTop, lastScrollTop, maxScrollTop,
     percentScrollTop, lastPercentScrollTop,
     heading,
-    planeOffset, planeOffsetDiff, lastPlaneOffset;
+    planeOffset, planeOffsetDiff, lastPlaneOffset,
+    goh;
 
 var CITIES = {
     'Amsterdam': {
@@ -29,20 +31,23 @@ var DESTINATION_ADDRESS = 'New York, NY, USA';
 var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {
-    startY: function() { return ($(window).height() / 2) - 152 },
-    runway: function() { return ($(window).width() / 2) - 259 },
-    middleY: function() { return $(window).height() / 2 },
-    rtMargin: function() { return ($(window).width() * 0.9) - (($('#plane').width() || 30) / 2) },
-    endX: function() { return $(window).width() / 2 },
-    endY: -685
+    startY:   function() { return ($(window).height() / 2) - 152 },
+    runway:   function() { return ($(window).width() / 2) - 259 },
+    middleX:  function() { return $(window).width() / 2},
+    middleY:  function() { return $(window).height() * 0.25 },
+    midYBank:  function() { return $(window).height() * 0.2 },
+    rtBank:   function() { return ($(window).width() * 0.9) - (($plane.width() || 30) / 2 - 5) },
+    rtMargin: function() { return ($(window).width() * 0.9) - (($plane.width() || 30) / 2) },
+    apprX:    function() { return $(window).width() * 0.6 },
+    endY:     function() { return $(window).height() / 2 }
 };
 
 var VLUCHT, _VLUCHT = function() {
     return [
         {
-            pos: 2,
-            easeIn: 1,
-            easeOut: 0.5,
+            pos: 0,
+            easeIn: 0,
+            easeOut: 2,
             offsets: {
                 before: {left: this.runway, top: this.startY},
                 at: {left: this.runway, top: this.startY},
@@ -52,46 +57,35 @@ var VLUCHT, _VLUCHT = function() {
         },
 
         {
-            pos: 5,
-            easeIn: 1.5,
-            easeOut: 1.5,
+            pos: 2.12,
+            easeIn: 0.0,
+            easeOut: 10,
             offsets: {
                 before: {left: this.runway, top: this.startY},
-                at: {left: (this.runway + this.rtMargin) / 2, top: this.middleY},
-                after: {left: this.rtMargin - 5, top: this.middleY}
+                at: {left: this.runway, top: this.startY},
+                after: {left: this.rtBank, top: this.midYBank}
             }
         },
 
         {
-            pos: 12.5,
-            easeIn: 4,
-            easeOut: 4.5,
-            offsets: {
-                before: { left: this.rtMargin, top: this.middleY},
-                at: {left: this.rtMargin, top:this.middleY},
-                after: {left: this.rtMargin, top: this.middleY}
-            }
-        },
-
-        {
-            pos: 40,
-            easeIn: 25,
+            pos: 12.8,
+            easeIn: 0,
             easeOut: 20,
             offsets: {
-                before: {left: this.rtMargin, top: this.middleY},
-                at: {left: this.rtMargin, top: this.middleY},
+                before: {left: this.rtBank, top: this.midYBank},
+                at: {left: this.rtBank, top: this.midYBank},
                 after: {left: this.rtMargin, top: this.middleY}
             }
         },
 
         {
-            pos: 67.2,
-            easeIn: 5,
-            easeOut: 15.7,
+            pos: 95,
+            easeIn: 30,
+            easeOut: 5,
             offsets: {
                 before: {left: this.rtMargin, top: this.middleY},
-                at: {left: this.endX, top: this.middleY},
-                after: {left: this.endX, top: this.endY}
+                at: {left: this.apprX, top: this.endY},
+                after: {left: this.middleX, top: this.endY}
             },
             destination: true
         }
@@ -202,7 +196,7 @@ function movePlane() {
             return _.has(vector, 'origin') && vector.origin === true;
         });
         if (origin) {
-            $('#plane')
+            $plane
                 .css(calcOffset(origin.offsets.at))
                 .rotate(0);
         }
@@ -214,12 +208,12 @@ function movePlane() {
         var after   = percentScrollTop > vector.pos && percentScrollTop <= vector.pos + vector.easeOut;
 
         if (before === false && after === false) {
-            $('#plane').removeClass('arrived on_runway cruising');
+            $plane.removeClass('arrived on_runway cruising');
             return;
         }
 
-        $('#plane').toggleClass('on_runway', vector.origin && after);
-        $('#plane').toggleClass('arrived',   vector.destination && after);
+        $plane.toggleClass('on_runway', vector.origin && after);
+        $plane.toggleClass('arrived',   vector.destination && after);
 
         vector.offsets.before = calcOffset(vector.offsets.before);
         vector.offsets.at     = calcOffset(vector.offsets.at);
@@ -250,13 +244,13 @@ function movePlane() {
         planeOffset = newOffset;
 
         if (Modernizr.csstransforms) {
-            $('#plane').css(planeOffset);
+            $plane.css(planeOffset);
         } else {
-            $('#plane').animate(planeOffset, 75);
+            $plane.animate(planeOffset, 75);
         }
 
         // Rotation based on movement since last call
-        var curOff  = _.extend(planeOffset, {top: $('#plane').offset().top});
+        var curOff  = _.extend(planeOffset, {top: $plane.offset().top});
         var lastOff = lastPlaneOffset || curOff;
         var deltaY = curOff.top  - lastOff.top;
         var deltaX = curOff.left - lastOff.left;
@@ -269,18 +263,19 @@ function movePlane() {
         var rndHeading = ((heading / 5).round()) * 5;
         heading = rndHeading;
 
-        $('#plane').rotate(heading);
+        $plane.rotate(heading);
 
-        lastPlaneOffset = _.extend(planeOffset, {top: $('#plane').offset().top});
+        lastPlaneOffset = _.extend(planeOffset, {top: $plane.offset().top});
     });
 }
 
 function _wayPoint(event) {
     lastScrollTop = scrollTop;
     scrollTop = $(document).scrollTop();
-    percentScrollTop = (100 / $(document).height()) * scrollTop;
+    maxScrollTop = $(document).height() - $(window).height();
+    percentScrollTop = (100 / maxScrollTop) * scrollTop;
     //console.log(percentScrollTop);
-    map.setCenter(interpolateLatLng(origin, destination, percentScrollTop, 60));
+    map.setCenter(interpolateLatLng(origin, destination, percentScrollTop, 100));
     movePlane();
     // Save the scroll position percentage and offset of the plane's DOM element
     lastPercentScrollTop = percentScrollTop;
@@ -316,8 +311,12 @@ function initialize() {
  */
 $(function(){
 
+    // Set this to be a jQuery object pointing to the DOM element for your 'plane'
+    $plane = $('#plane');
+
     // Size the Google Maps canvas to the window height, both on load and when the window is resized.
     $(window).on('load resize', function(){
+
         $('#map_canvas')
             .height($(this).height());
 
@@ -338,6 +337,31 @@ $(function(){
         });
         $('.portfolio_content, .header_title').css({
             marginLeft: introLeft
+        });
+
+        // Update the destination marker ('get over here')
+        goh = {
+            width: $('#get_over_here').width(),
+            height: $('#get_over_here').height()
+        };
+
+        // the offset in pixels of the center of the locator from
+        // the top-left corner of the background image
+        var locatorOffset = {
+            width:  310,
+            height: 74
+        };
+
+        $('#get_over_here').css({
+            height: newHeight + 100,
+            backgroundPosition: '' +
+                (((goh.width / 2) - locatorOffset.width) - ($plane.width() / 2)) + 'px ' +
+                ((locatorOffset.height) + ($plane.height() / 2)) + 'px'
+        });
+
+        var $goh = $('#get_over_here');
+        $('#contact_form').css({
+            marginLeft: ($(window).width() - $('#contact_form').width()) / 2
         });
 
         // Update the map and plane

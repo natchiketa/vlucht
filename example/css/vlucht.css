@@ -55,6 +55,6 @@ a{
 #plane.arrived {
     -webkit-transition: left 0s, top 0s;
     transition: left 0s, top 0s !important;
-    -webkit-transform: rotate(0deg) !important;
+    /*-webkit-transform: rotate(0deg) !important;*/
     transform: rotate(0deg) !important;
 }
