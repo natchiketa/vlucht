@@ -31,8 +31,8 @@ var DESTINATION_ADDRESS = 'New York, NY, USA';
 var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {
-    startY:   function() { return ($(window).height() / 2) - 152 },
-    runway:   function() { return ($(window).width() / 2) - 259 },
+    startY:   function() { return ($(window).height() / 2) - 137 },
+    runway:   function() { return ($(window).width() / 2) - 242 },
     middleX:  function() { return $(window).width() / 2},
     middleY:  function() { return $(window).height() * 0.25 },
     midYBank:  function() { return $(window).height() * 0.2 },
@@ -348,15 +348,15 @@ $(function(){
         // the offset in pixels of the center of the locator from
         // the top-left corner of the background image
         var locatorOffset = {
-            width:  310,
-            height: 74
+            width:  291,
+            height: 62
         };
 
         $('#get_over_here').css({
             height: newHeight + 100,
             backgroundPosition: '' +
                 (((goh.width / 2) - locatorOffset.width) - ($plane.width() / 2)) + 'px ' +
-                ((locatorOffset.height) + ($plane.height() / 2)) + 'px'
+                (((locatorOffset.height) + ($plane.height() / 2)) - 50) + 'px'
         });
 
         var $goh = $('#get_over_here');

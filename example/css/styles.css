@@ -25,6 +25,7 @@ h2 {
 }
 
 #cnt {
+    display: none;
     position: fixed;
     width: 10px; height: 10px;
     border: 2px solid blue;
@@ -103,7 +104,6 @@ h2 {
 #im_here {
     background: url(../images/intro_image.png) no-repeat;
     width: 649px;
-    height: 392px;
     display: block;
     position: relative;
     margin: auto;
