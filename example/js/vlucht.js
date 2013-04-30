@@ -368,13 +368,13 @@ $(function(){
         });
 
         var $goh = $('#get_over_here');
-        $('#contact_form').css({
-            marginLeft: ($(window).width() - $('#contact_form').width()) / 2
-        });
         $('#interested').css({
-            top: $goh.offset().top + 170,
-            left: ($(this).width() - $('#interested').width()) / 2,
-            marginTop: ($('#contact_form').offset().top - $('#get_over_here').offset().top - 170 - $('#interested').height()) / 2
+            top: $goh.offset().top + 190,
+            left: ($(this).width() - $('#interested').width()) / 2
+        });
+        $('#contact_form').css({
+            top: $goh.offset().top + 220 + $('#interested').height(),
+            left: ($(this).width() - $('#contact_form').width()) / 2
         });
 
         // Update the map and plane
