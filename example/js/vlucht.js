@@ -344,8 +344,8 @@ $(function(){
         $('.portfolio_content, .header_title').css({
             marginLeft: introLeft
         });
-        $('.skillset_bar .content p').css({
-            marginLeft: introLeft - 150
+        $('.skillset_bar p').css({
+            marginLeft: introLeft - 10
         });
         // Update the destination marker ('get over here')
         goh = {
@@ -433,7 +433,7 @@ $(function(){
             var latLng = new google.maps.LatLng(CITIES.CURRENT_LOCATION.lat, CITIES.CURRENT_LOCATION.lng);
             geocoder.geocode({'latLng': latLng}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
-                    console.log(results);
+                    //console.log(results);
                     var locality = _.find(results[0].address_components, function(c){
                         return _.contains(c.types, 'locality')
                     });

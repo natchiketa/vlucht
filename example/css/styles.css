@@ -221,7 +221,7 @@ ul.grid {
 }
 
 .skillset_bar {
-    width: 100%;
+    width: 70%;
     min-width: 650px;
     height: 58px;
     margin-bottom: 8px;
@@ -232,23 +232,41 @@ ul.grid {
     overflow: hidden;
 }
 
-.skillset_bar .content {
+.skillset_bar .skillmarks {
     width: 100%;
-    z-index: 2;
+    height: 36px;
+    padding: 10px;
     position: relative;
+    z-index: 2;
 }
 
-.skillset_bar .content p {
-    float: left;
-
-    margin-top: 25px;
+.skillset_bar p {
+    display: inline-block;
+    width: 140px;
+    margin: 0;
 }
 
-.skillset_bar .content img {
+.skillset_bar .skillmarks img {
     display: inline-block;
     margin: 15px 15px 0 0;
     position: absolute;
     right: 10px;
+}
+
+.skillset_bar .skillmark {
+    width: 10%;
+    height: 100%;
+    display: inline-block;
+    background-image: url(../images/skillset.png);
+    background-size: 200% 100%
+}
+
+.skillmark + .skillmark {
+    margin-left: 15px;
+}
+
+.skillset_bar .skillmark.on {
+    background-position: 33px 0;
 }
 
 #skillset_bars_container {

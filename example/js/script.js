@@ -9,6 +9,20 @@ function onFocus(el) {
     }
 }
 
+function initSkills() {
+    $('.skillset_bar .skillmarks').each(function() {
+        var skillType = $(this).data('skilltype');
+        var skillLevel = $(this).data('skilllevel');
+        $('<p/>').text(skillType).appendTo(this);
+        _.times(10, function(index) {
+            $('<div/>')
+                .addClass('skillmark')
+                .toggleClass('on', index < skillLevel)
+                .appendTo(this)
+        }, this);
+    });
+}
+
 $(document).ready(function () {
     $(".imgHover").hover(
         function () {
@@ -21,5 +35,7 @@ $(document).ready(function () {
         });
 
     $('.lightbox').lightbox();
+
+    initSkills();
 
 });
