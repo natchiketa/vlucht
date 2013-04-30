@@ -10,7 +10,7 @@ function onFocus(el) {
 }
 
 function initSkills() {
-    $('.skillset_bar .skillmarks').each(function() {
+    $('.skillset_bar').each(function() {
         var skillType = $(this).data('skilltype');
         var skillLevel = $(this).data('skilllevel');
         $('<p/>').text(skillType).appendTo(this);
@@ -18,7 +18,7 @@ function initSkills() {
             $('<div/>')
                 .addClass('skillmark')
                 .toggleClass('on', index < skillLevel)
-                .appendTo(this)
+                .appendTo($('.skillmarks', this))
         }, this);
     });
 }
