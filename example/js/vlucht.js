@@ -126,7 +126,7 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
                 lng: position.coords.longitude
             };
             destination = 'CURRENT_LOCATION';
-            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling').trigger('vlucht:getCurLocAddr');
+            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
         },
 
         // error handler
@@ -304,6 +304,9 @@ function initialize() {
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
+    // Now that the map is initialized, use the geocoder to find the name of the
+    // current user location provided by the browser's Geolocation API.
+
 }//end initialize
 
 /*
@@ -425,13 +428,18 @@ $(function(){
             percentScrollTop = $(document).scrollTop();
             movePlane();
             initialize();
+            _.delay(function(){
+                $(document).trigger('vlucht:getCurLocAddr');
+            }, 500);
         }
     });
 
     $(document).on('vlucht:getCurLocAddr', function() {
         if (!_.isUndefined(CITIES['CURRENT_LOCATION'])) {
             var latLng = new google.maps.LatLng(CITIES.CURRENT_LOCATION.lat, CITIES.CURRENT_LOCATION.lng);
-            geocoder.geocode({'latLng': latLng}, function(results, status) {
+            var destinationGeocoder = new google.maps.Geocoder();
+
+            destinationGeocoder.geocode({'latLng': latLng}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     //console.log(results);
                     var locality = _.find(results[0].address_components, function(c){
