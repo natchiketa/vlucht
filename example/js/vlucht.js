@@ -26,8 +26,8 @@ var CITIES = {
 // Origin/Destination Addresses: what you would search for if you were
 // searching for the locations with Google Maps. The destination will
 // only be used as a fallback, unless FORCE_DESTINATION is set to true
-var ORIGIN_ADDRESS      = 'Amsterdam, Netherlands';
-var DESTINATION_ADDRESS = 'New York, NY, USA';
+var ORIGIN_ADDRESS      = 'Heerhugowaard, Netherlands';
+var DESTINATION_ADDRESS = 'Sydney, NSW, Australia';
 var FORCE_DESTINATION   = false;
 
 var VLUCHTPUNTEN = {
@@ -57,7 +57,7 @@ var VLUCHT, _VLUCHT = function() {
         },
 
         {
-            pos: 2.12,
+            pos: 4,
             easeIn: 0.0,
             easeOut: 10,
             offsets: {
@@ -68,7 +68,7 @@ var VLUCHT, _VLUCHT = function() {
         },
 
         {
-            pos: 12.8,
+            pos: 14,
             easeIn: 0,
             easeOut: 20,
             offsets: {
@@ -121,19 +121,19 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
 
         // success handler
         function(position) {
-            console.log(position);
             CITIES['CURRENT_LOCATION'] = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
             destination = 'CURRENT_LOCATION';
-            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
+            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling').trigger('vlucht:getCurLocAddr');
         },
 
         // error handler
         function(errorCode) {
             console.log(errorCode)
-            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
+            $(document)
+                .off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
         }
 
     );
@@ -213,7 +213,7 @@ function movePlane() {
         }
 
         $plane.toggleClass('on_runway', vector.origin && after);
-        $plane.toggleClass('arrived',   vector.destination && after);
+        $plane.toggleClass('arrived',   vector.destination && percentScrollTop == 100);
 
         vector.offsets.before = calcOffset(vector.offsets.before);
         vector.offsets.at     = calcOffset(vector.offsets.at);
@@ -321,13 +321,19 @@ $(function(){
             .height($(this).height());
 
         // Responsive positioning for the intro
-        var newHeight = $(this).height() / 2;
+        var newHeight = Math.max($(this).height() / 2, 320);
+        var newVMargin  = ($(this).height() - newHeight) / 2;
         $('#im_here')
             .height(newHeight)
             .css({
-                marginTop: ($(this).height() - $('#im_here').height()) / 2,
-                backgroundPosition: '0 ' + (($(window).height() / 4) - 162) + 'px'
+                marginTop: newVMargin,
+                marginBottom: newVMargin,
+                backgroundPosition: '0 ' + Math.max(newVMargin - 162, 0) + 'px'
             });
+        var imHereOffset = $('#im_here').offset();
+        $('#view_my_work').css({
+            top: 240 + Math.max(newVMargin - 162, 0)
+        });
 
         // Update the portfolio layout
         var introLeft = $('#im_here').offset().left;
@@ -338,7 +344,9 @@ $(function(){
         $('.portfolio_content, .header_title').css({
             marginLeft: introLeft
         });
-
+        $('.skillset_bar .content p').css({
+            marginLeft: introLeft - 150
+        });
         // Update the destination marker ('get over here')
         goh = {
             width: $('#get_over_here').width(),
@@ -362,6 +370,11 @@ $(function(){
         var $goh = $('#get_over_here');
         $('#contact_form').css({
             marginLeft: ($(window).width() - $('#contact_form').width()) / 2
+        });
+        $('#interested').css({
+            top: $goh.offset().top + 170,
+            left: ($(this).width() - $('#interested').width()) / 2,
+            marginTop: ($('#contact_form').offset().top - $('#get_over_here').offset().top - 170 - $('#interested').height()) / 2
         });
 
         // Update the map and plane
@@ -396,7 +409,10 @@ $(function(){
         geocoder.geocode({address: DESTINATION_ADDRESS}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var uscoredName = _.pluck(results[0].address_components, 'long_name').join('_').underscore();
-                CITIES[uscoredName] = _.object(['lat', 'lng'], _.values(results[0].geometry.location));
+                CITIES[uscoredName] = _.object(
+                    ['lat', 'lng', 'rawData'],
+                    _.values(results[0].geometry.location).push([results[0]])
+                );
                 resolvedDest = uscoredName;
                 $(document).trigger('vlucht:resolvedAddress');
             }
@@ -409,6 +425,21 @@ $(function(){
             percentScrollTop = $(document).scrollTop();
             movePlane();
             initialize();
+        }
+    });
+
+    $(document).on('vlucht:getCurLocAddr', function() {
+        if (!_.isUndefined(CITIES['CURRENT_LOCATION'])) {
+            var latLng = new google.maps.LatLng(CITIES.CURRENT_LOCATION.lat, CITIES.CURRENT_LOCATION.lng);
+            geocoder.geocode({'latLng': latLng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    console.log(results);
+                    var locality = _.find(results[0].address_components, function(c){
+                        return _.contains(c.types, 'locality')
+                    });
+                    $('.userplacename').text(locality.long_name);
+                }
+            });
         }
     });
 
