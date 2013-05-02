@@ -2,7 +2,8 @@
  Global
  */
 var wayPoint,
-    map, origin, destination,
+    map, geocoder, origin, destination,
+    destDisplayName,
     $plane,
     resolvedOrig, resolvedDest,
     scrollTop, lastScrollTop, maxScrollTop,
@@ -113,7 +114,7 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
     // If forcing the specified destination name, or if the browser doesn't support
     // geolocation, just use the specified name
     if (forceDefaultDest || !navigator.geolocation) {
-        $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
+        $(document).trigger('vlucht:bindscrolling');
         return;
     }
 
@@ -126,14 +127,13 @@ function setOriginAndDestination(originName, destinationName, forceDefaultDest) 
                 lng: position.coords.longitude
             };
             destination = 'CURRENT_LOCATION';
-            $(document).off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
+            $(document).trigger('vlucht:bindscrolling');
         },
 
         // error handler
         function(errorCode) {
             console.log(errorCode)
-            $(document)
-                .off('vlucht:bindscrolling').trigger('vlucht:bindscrolling');
+            $(document).trigger('vlucht:bindscrolling');
         }
 
     );
@@ -304,9 +304,6 @@ function initialize() {
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    // Now that the map is initialized, use the geocoder to find the name of the
-    // current user location provided by the browser's Geolocation API.
-
 }//end initialize
 
 /*
@@ -320,8 +317,7 @@ $(function(){
     // Size the Google Maps canvas to the window height, both on load and when the window is resized.
     $(window).on('load resize', function(){
 
-        $('#map_canvas')
-            .height($(this).height());
+        //$('#map_canvas').height($(this).height());
 
         // Responsive positioning for the intro
         var newHeight = Math.max($(this).height() / 2, 320);
@@ -381,7 +377,12 @@ $(function(){
         });
 
         // Update the map and plane
-        wayPoint();
+        try {
+            wayPoint();
+        } catch(e) {
+            console.log(e);
+        }
+
     });
 
     // This custom event, `vlucht:bindscrolling` is triggered by setOriginAndDestination
@@ -392,8 +393,16 @@ $(function(){
         // the Underscore library, or an Underscore-compatible equivalent, like Lodash.
         wayPoint = _.throttle(_wayPoint, 100);
 
-        $(window).on('scroll touchmove', function(event) {
+        $(window).off('scroll touchmove').on('scroll touchmove', function(event) {
             wayPoint(event);
+            navigator.geolocation.getCurrentPosition(
+                function() {
+                    $(document).trigger('vlucht:getCurLocAddr');
+                },
+                function() {
+
+                }
+            );
         });
     });
 
@@ -412,10 +421,15 @@ $(function(){
         geocoder.geocode({address: DESTINATION_ADDRESS}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var uscoredName = _.pluck(results[0].address_components, 'long_name').join('_').underscore();
+                //console.log('results: ', results);
                 CITIES[uscoredName] = _.object(
-                    ['lat', 'lng', 'rawData'],
-                    _.values(results[0].geometry.location).push([results[0]])
+                    ['lat', 'lng'],
+                    _.values(results[0].geometry.location)
                 );
+                var locality = _.find(results[0].address_components, function(c){
+                    return _.contains(c.types, 'locality')
+                });
+                destDisplayName = locality.long_name;
                 resolvedDest = uscoredName;
                 $(document).trigger('vlucht:resolvedAddress');
             }
@@ -425,30 +439,35 @@ $(function(){
     $(document).on('vlucht:resolvedAddress', function(){
         if (!_.isUndefined(resolvedOrig) && !_.isUndefined(resolvedDest)) {
             setOriginAndDestination(resolvedOrig, resolvedDest, FORCE_DESTINATION);
-            percentScrollTop = $(document).scrollTop();
-            movePlane();
-            initialize();
-            _.delay(function(){
-                $(document).trigger('vlucht:getCurLocAddr');
-            }, 500);
+            $(document).trigger(
+                resolvedDest === 'CURRENT_LOCATION'
+                    ? 'vlucht:getCurLocAddr'
+                    : 'vlucht:origDestResolved'
+            );
         }
     });
 
-    $(document).on('vlucht:getCurLocAddr', function() {
-        if (!_.isUndefined(CITIES['CURRENT_LOCATION'])) {
-            var latLng = new google.maps.LatLng(CITIES.CURRENT_LOCATION.lat, CITIES.CURRENT_LOCATION.lng);
-            var destinationGeocoder = new google.maps.Geocoder();
+    $(document).on('vlucht:origDestResolved', function() {
+        percentScrollTop = $(document).scrollTop();
+        movePlane();
+        if (_.isUndefined(map)) initialize();
+    });
 
-            destinationGeocoder.geocode({'latLng': latLng}, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    //console.log(results);
-                    var locality = _.find(results[0].address_components, function(c){
-                        return _.contains(c.types, 'locality')
-                    });
-                    $('.userplacename').text(locality.long_name);
-                }
-            });
-        }
+
+    $(document).on('vlucht:getCurLocAddr', function() {
+        if (_.isUndefined(CITIES.CURRENT_LOCATION)) return;
+        var latLng = new google.maps.LatLng(CITIES.CURRENT_LOCATION.lat, CITIES.CURRENT_LOCATION.lng);
+        geocoder.geocode({'latLng': latLng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                //console.log(results);
+                var locality = _.find(results[0].address_components, function(c){
+                    return _.contains(c.types, 'locality')
+                });
+                destDisplayName = locality.long_name
+                $('.userplacename').text(destDisplayName);
+            }
+            $(document).trigger('vlucht:origDestResolved');
+        });
     });
 
     geocoder = new google.maps.Geocoder();
